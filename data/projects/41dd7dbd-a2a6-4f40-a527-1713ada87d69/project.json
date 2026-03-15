@@ -1,0 +1,13 @@
+{
+  "name": "My First Project",
+  "description": "Test project",
+  "settings": {
+    "defaultRuntime": "persistent",
+    "maxInstances": 4,
+    "autoSave": true
+  },
+  "tags": [],
+  "id": "41dd7dbd-a2a6-4f40-a527-1713ada87d69",
+  "createdAt": "2026-03-15T13:18:34.065Z",
+  "updatedAt": "2026-03-15T13:18:34.065Z"
+}
