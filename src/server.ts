@@ -10,9 +10,9 @@ import { SchemaValidator } from "./validation/schema.js"
 import { CrudHandlers } from "./router/handlers.js"
 import { buildRouter } from "./router/builder.js"
 
-const configPath = process.env.FS_CONFIG ?? "./vfs.config.json"
+const configPath = process.env.VFS_CONFIG ?? "./vfs.config.json"
 
-console.log(`[lamina-fs] loading config from ${configPath}`)
+console.log(`[vfs-server] loading config from ${configPath}`)
 
 const config = loadConfig(configPath)
 const { app: appConfig } = config
@@ -33,7 +33,7 @@ const server = createServer()
 const wss = new WebSocketServer({ server })
 
 wss.on("connection", (ws) => {
-  console.log("[lamina-fs] ws client connected")
+  console.log("[vfs-server] ws client connected")
 
   const unsub = watcher.subscribe((event) => {
     if (ws.readyState === ws.OPEN) {
@@ -42,12 +42,12 @@ wss.on("connection", (ws) => {
   })
 
   ws.on("close", () => {
-    console.log("[lamina-fs] ws client disconnected")
+    console.log("[vfs-server] ws client disconnected")
     unsub()
   })
 })
 
-console.log(`[lamina-fs] sections: ${[...config.sections.keys()].join(", ")}`)
-console.log(`[lamina-fs] listening on port ${appConfig.port}`)
+console.log(`[vfs-server] sections: ${[...config.sections.keys()].join(", ")}`)
+console.log(`[vfs-server] listening on port ${appConfig.port}`)
 
 serve({ fetch: router.fetch, port: appConfig.port })

@@ -13,7 +13,7 @@ clean:
 	rm -rf dist data
 
 docker-build:
-	docker build -t lamina-fs .
+	docker build -t vfs-server .
 
 docker-run:
-	docker run -p 3001:3001 -v $(PWD)/data:/app/data lamina-fs
+	docker run -p 3001:3001 -v $(PWD)/data:/app/data lvfs-server
