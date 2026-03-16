@@ -1,4 +1,4 @@
-# vfs-erver
+# vfs-server
 
 A lightweight file system backend framework. Define sections in a config file and get a fully working REST API with file watching, schema validation, and WebSocket events automatically.
 
