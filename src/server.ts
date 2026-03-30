@@ -1,4 +1,3 @@
-import { createServer } from "node:http"
 import { serve } from "@hono/node-server"
 import { WebSocketServer } from "ws"
 import { loadConfig } from "./config/loader.js"
@@ -9,6 +8,7 @@ import { StoreWatcher } from "./store/watcher.js"
 import { SchemaValidator } from "./validation/schema.js"
 import { CrudHandlers } from "./router/handlers.js"
 import { buildRouter } from "./router/builder.js"
+import type { Server } from "node:http"
 
 const configPath = process.env.VFS_CONFIG ?? "./vfs.config.json"
 
@@ -29,7 +29,11 @@ watcher.start()
 
 const router = buildRouter(config, handlers)
 
-const server = createServer()
+console.log(`[vfs-server] sections: ${[...config.sections.keys()].join(", ")}`)
+console.log(`[vfs-server] listening on port ${appConfig.port}`)
+
+const server = serve({ fetch: router.fetch, port: appConfig.port }) as unknown as Server
+
 const wss = new WebSocketServer({ server })
 
 wss.on("connection", (ws) => {
@@ -46,8 +50,3 @@ wss.on("connection", (ws) => {
     unsub()
   })
 })
-
-console.log(`[vfs-server] sections: ${[...config.sections.keys()].join(", ")}`)
-console.log(`[vfs-server] listening on port ${appConfig.port}`)
-
-serve({ fetch: router.fetch, port: appConfig.port })

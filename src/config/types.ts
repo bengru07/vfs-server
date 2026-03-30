@@ -1,5 +1,18 @@
 export type StorageType = "directory" | "file"
 
+export interface FolderOps {
+  create: boolean
+  rename: boolean
+  delete: boolean
+  move: boolean
+  list: boolean
+}
+
+export interface FolderConfig {
+  enabled: boolean
+  ops: FolderOps
+}
+
 export interface SectionConfig {
   name: string
   idField: string
@@ -7,6 +20,8 @@ export interface SectionConfig {
   parent?: string
   children?: string[]
   schema?: Record<string, unknown>
+  upsert?: boolean
+  folders?: FolderConfig
 }
 
 export interface AppConfig {
@@ -28,4 +43,11 @@ export interface ResolvedSection {
 export interface ResolvedConfig {
   app: AppConfig
   sections: Map<string, ResolvedSection>
+}
+
+export interface FolderNode {
+  name: string
+  path: string
+  children: FolderNode[]
+  items: string[]
 }

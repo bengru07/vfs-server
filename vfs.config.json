@@ -1,6 +1,6 @@
 {
   "dataDir": "./data",
-  "port": 3001,
+  "port": 8080,
   "watch": true,
   "cors": "*",
   "sections": [
@@ -8,29 +8,59 @@
       "name": "projects",
       "idField": "id",
       "storage": "directory",
-      "children": ["workflows", "deployments"],
+      "children": [
+        "workflows",
+        "deployments"
+      ],
       "schema": {
         "type": "object",
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id":          { "type": "string" },
-          "name":        { "type": "string", "minLength": 1 },
-          "description": { "type": "string" },
-          "createdAt":   { "type": "string" },
-          "updatedAt":   { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
           "settings": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "defaultRuntime": { "type": "string", "enum": ["persistent", "ephemeral"] },
-              "maxInstances":   { "type": "number", "minimum": 1 },
-              "autoSave":       { "type": "boolean" }
+              "defaultRuntime": {
+                "type": "string",
+                "enum": [
+                  "persistent",
+                  "ephemeral"
+                ]
+              },
+              "maxInstances": {
+                "type": "number",
+                "minimum": 1
+              },
+              "autoSave": {
+                "type": "boolean"
+              }
             }
           },
           "tags": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -40,24 +70,62 @@
       "idField": "id",
       "storage": "file",
       "parent": "projects",
+      "upsert": true,
+      "folders": {
+        "enabled": true,
+        "ops": {
+          "create": true,
+          "rename": true,
+          "delete": true,
+          "move": true,
+          "list": true
+        }
+      },
       "schema": {
         "type": "object",
-        "required": ["id", "workflow"],
+        "required": [
+          "id",
+          "workflow"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id":        { "type": "string" },
-          "createdAt": { "type": "string" },
-          "updatedAt": { "type": "string" },
-          "inputs":    { "type": "object" },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object"
+          },
           "workflow": {
             "type": "object",
-            "required": ["id", "version", "name", "nodes", "edges"],
+            "required": [
+              "id",
+              "version",
+              "name",
+              "nodes",
+              "edges"
+            ],
             "properties": {
-              "id":      { "type": "string" },
-              "version": { "type": "string" },
-              "name":    { "type": "string" },
-              "nodes":   { "type": "array" },
-              "edges":   { "type": "array" }
+              "id": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "nodes": {
+                "type": "array"
+              },
+              "edges": {
+                "type": "array"
+              }
             }
           }
         }
@@ -68,22 +136,69 @@
       "idField": "id",
       "storage": "file",
       "parent": "projects",
+      "upsert": true,
+      "folders": {
+        "enabled": true,
+        "ops": {
+          "create": true,
+          "rename": true,
+          "delete": true,
+          "move": true,
+          "list": true
+        }
+      },
       "schema": {
         "type": "object",
-        "required": ["id", "workflowId", "status"],
+        "required": [
+          "id",
+          "workflowId",
+          "status"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id":           { "type": "string" },
-          "workflowId":   { "type": "string" },
-          "workflowName": { "type": "string" },
-          "projectId":    { "type": "string" },
-          "status":       { "type": "string", "enum": ["pending", "running", "success", "failed", "stopped"] },
-          "createdAt":    { "type": "string" },
-          "startedAt":    { "type": "string" },
-          "finishedAt":   { "type": "string" },
-          "inputs":       { "type": "object" },
-          "error":        { "type": "string" },
-          "nodeStates":   { "type": "object" }
+          "id": {
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "workflowName": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "success",
+              "failed",
+              "stopped"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "finishedAt": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object"
+          },
+          "error": {
+            "type": "string"
+          },
+          "nodeStates": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
         }
       }
     },
@@ -93,21 +208,63 @@
       "storage": "file",
       "schema": {
         "type": "object",
-        "required": ["id", "version", "executor", "protocol", "entry", "inputs", "outputs"],
+        "required": [
+          "id",
+          "version",
+          "executor",
+          "protocol",
+          "entry",
+          "inputs",
+          "outputs"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id":          { "type": "string" },
-          "version":     { "type": "string" },
-          "runtime":     { "type": "string", "enum": ["persistent", "ephemeral"] },
-          "executor":    { "type": "string" },
-          "protocol":    { "type": "string" },
-          "entry":       { "type": "string" },
-          "inputs":      { "type": "array", "items": { "type": "string" } },
-          "outputs":     { "type": "array", "items": { "type": "string" } },
-          "eager_init":  { "type": "boolean" },
-          "config":      { "type": "object" },
-          "createdAt":   { "type": "string" },
-          "updatedAt":   { "type": "string" }
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string",
+            "enum": [
+              "persistent",
+              "ephemeral"
+            ]
+          },
+          "executor": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "entry": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "eager_init": {
+            "type": "boolean"
+          },
+          "config": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
         }
       }
     }

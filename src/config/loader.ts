@@ -1,12 +1,29 @@
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import type { AppConfig, ResolvedConfig, ResolvedSection } from "./types.js"
+import type { AppConfig, FolderConfig, FolderOps, ResolvedConfig, ResolvedSection } from "./types.js"
+
+const DEFAULT_FOLDER_OPS: FolderConfig = {
+  enabled: false,
+  ops: {
+    create: false,
+    rename: false,
+    delete: false,
+    move: false,
+    list: false,
+  },
+}
 
 export function loadConfig(configPath = "./vfs.config.json"): ResolvedConfig {
   const raw = readFileSync(resolve(process.cwd(), configPath), "utf-8")
   const app: AppConfig = JSON.parse(raw)
 
   validate(app)
+
+  for (const section of app.sections) {
+    if (section.folders) {
+      section.folders = normalizeFolderConfig(section.folders)
+    }
+  }
 
   const sections = new Map<string, ResolvedSection>()
 
@@ -33,6 +50,24 @@ export function loadConfig(configPath = "./vfs.config.json"): ResolvedConfig {
   return { app, sections }
 }
 
+function normalizeFolderConfig(raw: Partial<FolderConfig> & { enabled?: boolean }): FolderConfig {
+  if (raw.enabled === false) {
+    return { enabled: false, ops: { create: false, rename: false, delete: false, move: false, list: false } }
+  }
+
+  const ops: Partial<FolderOps> = raw.ops ?? {}
+  return {
+    enabled: true,
+    ops: {
+      create: ops.create ?? true,
+      rename: ops.rename ?? true,
+      delete: ops.delete ?? true,
+      move: ops.move ?? true,
+      list: ops.list ?? true,
+    },
+  }
+}
+
 function validate(app: AppConfig) {
   if (!app.dataDir) throw new Error("vfs.config.json: missing dataDir")
   if (!app.port) throw new Error("vfs.config.json: missing port")
@@ -47,6 +82,7 @@ function validate(app: AppConfig) {
     if (s.storage === "directory" && s.parent) {
       throw new Error(`section ${s.name}: directory storage cannot have a parent`)
     }
+
   }
 }
 
@@ -65,3 +101,5 @@ function validateRelationships(
     }
   }
 }
+
+export { DEFAULT_FOLDER_OPS }
